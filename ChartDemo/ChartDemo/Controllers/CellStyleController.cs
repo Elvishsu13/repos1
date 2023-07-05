@@ -1,4 +1,6 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using NPOI.HSSF.UserModel;
+using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -34,6 +36,7 @@ namespace ChartDemo.Controllers
         {
             IWorkbook wb;
             ISheet ws;
+
             if (optionalstr.EndsWith("s"))
             {
                 wb = new HSSFWorkbook();
@@ -51,10 +54,19 @@ namespace ChartDemo.Controllers
             {
                 ws = wb.CreateSheet("sheet1");
             }
+
+            XSSFCellStyle evenStyle = (XSSFCellStyle)wb.CreateCellStyle();
+            evenStyle.FillPattern = FillPattern.SolidForeground;
+            evenStyle.FillForegroundColor = NPOI.SS.UserModel.IndexedColors.Rose.Index;
+
+            //XSSFCellStyle cellStyle = (XSSFCellStyle)wb.CreateCellStyle();
+            //cellStyle.FillBackgroundColor = XSSFColor.Rose.Index;
+
             ws.CreateRow(0);
             for (int i = 0; i < dt.Columns.Count; i++)
             {
-                ws.GetRow(0).CreateCell(i).SetCellValue(dt.Columns[i].ColumnName);
+                XSSFCell cell = (XSSFCell)ws.GetRow(0).CreateCell(i);
+                cell.SetCellValue(dt.Columns[i].ColumnName);
             }
 
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -62,7 +74,9 @@ namespace ChartDemo.Controllers
                 ws.CreateRow(i + 1);
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                    ws.GetRow(i + 1).CreateCell(j).SetCellValue(dt.Rows[i][j].ToString());
+                    XSSFCell cell = (XSSFCell)ws.GetRow(i + 1).CreateCell(j);
+                    cell.SetCellValue(dt.Rows[i][j].ToString());
+                    cell.CellStyle = evenStyle;
                 }
             }
             return wb;
@@ -77,7 +91,7 @@ namespace ChartDemo.Controllers
             dt.Columns.Add("UserName");
 
             DataRow _ravi = dt.NewRow();
-            _ravi["UserID"] = "11111";
+            _ravi["UserID"] = "abc";
             _ravi["UserName"] = "Elvis";
             dt.Rows.Add(_ravi);
 

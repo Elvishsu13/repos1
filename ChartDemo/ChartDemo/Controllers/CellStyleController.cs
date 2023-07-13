@@ -54,8 +54,12 @@ namespace ChartDemo.Controllers
             {
                 ws = wb.CreateSheet("sheet1");
             }
+            //FillForegroundXSSFColor
+            ICellStyle obj1 = wb.CreateCellStyle();
+            //XSSFCellStyle obj2 = wb.CreateCellStyle(); 
 
             XSSFCellStyle evenStyle = (XSSFCellStyle)wb.CreateCellStyle();
+            ICellStyle evenStyle2 = (ICellStyle)wb.CreateCellStyle();
             evenStyle.FillPattern = FillPattern.SolidForeground;
             evenStyle.FillForegroundColor = NPOI.SS.UserModel.IndexedColors.Rose.Index;
 
@@ -76,9 +80,11 @@ namespace ChartDemo.Controllers
                 {
                     XSSFCell cell = (XSSFCell)ws.GetRow(i + 1).CreateCell(j);
                     cell.SetCellValue(dt.Rows[i][j].ToString());
-                    cell.CellStyle = evenStyle;
                 }
             }
+
+            ws.GetRow(1).GetCell(0).CellStyle = evenStyle;
+
             return wb;
 
         }
